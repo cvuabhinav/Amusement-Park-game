@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Math-Park VR</title>
+  <style>
+    html, body { height: 100%; margin: 0; background: #000; overflow: hidden; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    #overlay {
+      position: absolute; left: 20px; top: 20px; color: #fff; 
+      background: rgba(0,0,0,0.8); padding: 15px; border-radius: 10px; 
+      border: 1px solid #00d2ff; z-index: 10; pointer-events: none;
+    }
+    #math-hud {
+      position: absolute; top: 20px; right: 20px; width: 250px;
+      background: rgba(0, 40, 80, 0.9); color: #00d2ff; padding: 15px;
+      border: 2px solid #00d2ff; border-radius: 10px; display: none; z-index: 100;
+    }
+    #ui-controls {
+      position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+      display: flex; gap: 8px; z-index: 20; flex-wrap: wrap; justify-content: center;
+    }
+    button {
+      padding: 10px 15px; cursor: pointer; border-radius: 5px; border: 1px solid #00d2ff;
+      background: #111; color: #00d2ff; font-weight: bold; text-transform: uppercase;
+    }
+    button:hover { background: #00d2ff; color: #000; }
+  </style>
+</head>
+<body>
+  <div id="overlay">
+    <strong style="color:#00d2ff">Math-Park Explorer</strong><br>
+    • Click Screen to Look<br>
+    • WASD to Walk
+  </div>
+
+  <div id="math-hud">
+    <h3 id="ride-name" style="margin-top:0">Ride Name</h3>
+    <p id="math-desc">Math concept goes here...</p>
+    <div id="math-formula" style="font-family: monospace; background: #000; padding: 5px; font-size: 0.9em;"></div>
+  </div>
+
+  <div id="ui-controls">
+    <button onclick="window.setRideMode('walking')">Exit Ride</button>
+    <button onclick="window.setRideMode('coaster')">Coaster</button>
+    <button onclick="window.setRideMode('wheel')">Wheel</button>
+    <button onclick="window.setRideMode('dropper')">The Drop</button>
+    <button onclick="window.setRideMode('carousel')">Carousel</button>
+    <button onclick="window.setRideMode('slide')">Aqua Slide</button>
+  </div>
+
+  <div id="ui-overlay" style="position: absolute; bottom: 20px; left: 20px; z-index: 100;">
+    <button id="ticket-btn" onclick="getTicket()" style="padding: 10px; background: #ffd700;">Get Math Ticket</button>
+    <button id="entry-btn" onclick="enterPark()" style="padding: 10px; background: #555;" disabled>Enter Rides</button>
+    
+    <div id="ride-controls" style="display: none; margin-top: 10px;">
+        <button onclick="setRideMode('coaster')">Sin Dropper</button>
+        <button onclick="setRideMode('wheel')">Unit Wheel</button>
+        <button onclick="setRideMode('dropper')">Tan Drop</button>
+        <button onclick="setRideMode('carousel')">Carousel</button>
+        <button onclick="setRideMode('slide')">Archimedean Slide</button>
+        <button onclick="setRideMode('walking')" style="background: #ff4444; color: white;">Exit Ride</button>
+    </div>
+</div>
+
+<div id="math-hud" style="position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.8); color: #00d2ff; padding: 15px; border: 2px solid #00d2ff; border-radius: 10px; display: none; width: 250px;">
+    <b id="math-title"></b><br>
+    <span id="math-desc" style="color: white; font-size: 0.9em;"></span>
+</div>
+
+  #math-hud {
+  position: absolute; top: 20px; right: 20px; width: 220px;
+  background: rgba(0, 0, 0, 0.85); color: #00d2ff; padding: 15px;
+  border: 2px solid #00d2ff; border-radius: 10px; display: none; z-index: 100;
+  pointer-events: none;
+}
+
+<div id="math-hud">
+  <b id="math-title" style="font-size:1.2em;"></b><br>
+  <span id="math-desc"></span><br>
+  <code id="math-formula" style="color:#fff; display:block; margin-top:5px;"></code>
+</div>
+
+  <script type="importmap">
+    { "imports": { "three": "https://unpkg.com/three@0.152.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.152.0/examples/jsm/" } }
+  </script>
+  <script type="module" src="main.js"></script>
+</body>
+</html>
