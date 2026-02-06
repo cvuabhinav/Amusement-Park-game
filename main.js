@@ -22,6 +22,13 @@ const sun = new THREE.DirectionalLight(0xffffff, 1);
 sun.position.set(50, 100, 50);
 scene.add(sun);
 
+// --- VR CONTROLLER SETUP ---
+const controller1 = renderer.xr.getController(0);
+const controller2 = renderer.xr.getController(1);
+// Adding empty rays just to visualize direction if needed, 
+// but for now we just need them initialized to track input sources.
+scene.add(controller1);
+scene.add(controller2);
 
 
 // --- WORLD ---
@@ -431,12 +438,69 @@ window.setRideMode = (mode) => {
     } else if (hud) {
         hud.style.display = 'block';
         document.getElementById('math-desc').innerText = mathRegistry[mode];
+        document.getElementById('math-title').innerText = mode.toUpperCase();
     }
 };
+
+// --- VR LOCOMOTION HELPER ---
+function handleVRMovement() {
+    // Only move if we are in 'walking' mode
+    if (window.rideMode !== 'walking') return;
+
+    const session = renderer.xr.getSession();
+    if (session) {
+        for (const source of session.inputSources) {
+            if (source.gamepad) {
+                // Typical mapping for Quest/standard XR controllers:
+                // axes[2] = X (Left/Right)
+                // axes[3] = Y (Up/Down - Forward/Back)
+                const data = source.gamepad;
+                
+                // LEFT HAND: Walk (Translate)
+                if (source.handedness === 'left') {
+                    const stickX = data.axes[2];
+                    const stickY = data.axes[3];
+
+                    // Deadzone to prevent drift
+                    if (Math.abs(stickX) > 0.1 || Math.abs(stickY) > 0.1) {
+                        const speed = 0.15;
+                        
+                        // Get camera forward direction, projected to floor (Y=0)
+                        const forward = new THREE.Vector3();
+                        camera.getWorldDirection(forward);
+                        forward.y = 0;
+                        forward.normalize();
+
+                        // Get camera right direction
+                        const right = new THREE.Vector3();
+                        right.crossVectors(forward, new THREE.Vector3(0, 1, 0));
+
+                        // Apply movement
+                        cameraRig.position.add(right.multiplyScalar(stickX * speed)); // Strafe
+                        cameraRig.position.add(forward.multiplyScalar(stickY * speed)); // Forward/Back
+                    }
+                }
+
+                // RIGHT HAND: Turn (Rotate)
+                if (source.handedness === 'right') {
+                    const stickX = data.axes[2];
+                    // Deadzone for turning
+                    if (Math.abs(stickX) > 0.5) {
+                         // Simple Smooth Turn
+                        cameraRig.rotation.y -= stickX * 0.04;
+                    }
+                }
+            }
+        }
+    }
+}
 
 // --- ANIMATION LOOP ---
 function animate(time) {
     const t = time * 0.001;
+
+    // Run VR input check
+    handleVRMovement();
 
     // Animations
     const cp = (t * 0.04) % 1;
@@ -453,7 +517,7 @@ function animate(time) {
         npc.position.y = Math.abs(Math.sin(t * 2 + i)) * 0.1;
     });
 
-    // Camera Modes
+    // Camera Modes (Ride Attachments)
     if (window.rideMode === 'coaster') {
         cameraRig.position.copy(cart.position);
         const matrix = new THREE.Matrix4().lookAt(cart.position, coasterPath.getPointAt((cp + 0.01) % 1), new THREE.Vector3(0,1,0));
@@ -473,7 +537,7 @@ function animate(time) {
         const curvePoint = slideCurve.getPointAt(sp);
         cameraRig.position.set(curvePoint.x - 60, curvePoint.y + 1, curvePoint.z + 40);
     } else {
-        // WALKING MODE
+        // WALKING MODE (Keyboard fallback)
         const move = new THREE.Vector3();
         if(keys['KeyW']) move.z -= 1; if(keys['KeyS']) move.z += 1;
         if(keys['KeyA']) move.x -= 1; if(keys['KeyD']) move.x += 1;
@@ -486,7 +550,8 @@ function animate(time) {
         // INTERACTION
         if(cameraRig.position.distanceTo(ticketStall.position) < 5 && !window.hasTicket) {
             window.hasTicket = true;
-            alert("Ticket Gained! Now you can ride!");
+            // Note: alert() might not show inside VR headset properly, consider using in-game UI later
+            console.log("Ticket Gained! Now you can ride!");
         }
     }
     renderer.render(scene, camera);
