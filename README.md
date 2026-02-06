@@ -1,6 +1,6 @@
 # Amusement-Park-game
 
-Science: Physics: Vectors
-Maths: Vector transformations in space 
-Arts: Visuals for ride, 3D modeling from extentions 
-Technology: Tech tools: VSC, VR implementation. Tech stack: Javascript for physics, HTML for web interface
+1. Science: Physics: Vectors
+2. Maths: Vector transformations in space 
+3. Arts: Visuals for ride, 3D modeling from extentions 
+4. Technology: (Tech tools: VSC, VR implementation.) 9Tech stack: Javascript for physics, HTML for web interface)
