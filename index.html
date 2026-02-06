@@ -13,8 +13,9 @@
     }
     #math-hud {
       position: absolute; top: 20px; right: 20px; width: 250px;
-      background: rgba(0, 40, 80, 0.9); color: #00d2ff; padding: 15px;
+      background: rgba(0, 0, 0, 0.85); color: #00d2ff; padding: 15px;
       border: 2px solid #00d2ff; border-radius: 10px; display: none; z-index: 100;
+      pointer-events: none;
     }
     #ui-controls {
       position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
@@ -25,19 +26,24 @@
       background: #111; color: #00d2ff; font-weight: bold; text-transform: uppercase;
     }
     button:hover { background: #00d2ff; color: #000; }
+    
+    /* VR Button Styling override if needed */
+    button#VRButton {
+        bottom: 80px !important; /* Move it up slightly so it doesn't overlap ride controls */
+    }
   </style>
 </head>
 <body>
   <div id="overlay">
     <strong style="color:#00d2ff">Math-Park Explorer</strong><br>
-    • Click Screen to Look<br>
-    • WASD to Walk
+    • Desktop: WASD to Move, Click to Look<br>
+    • VR: Left Stick Move, Right Stick Turn
   </div>
 
   <div id="math-hud">
-    <h3 id="ride-name" style="margin-top:0">Ride Name</h3>
-    <p id="math-desc">Math concept goes here...</p>
-    <div id="math-formula" style="font-family: monospace; background: #000; padding: 5px; font-size: 0.9em;"></div>
+    <b id="math-title" style="font-size:1.2em;">RIDE NAME</b><br>
+    <span id="math-desc" style="color: white; font-size: 0.9em;">Math concept goes here...</span>
+    <code id="math-formula" style="display:block; margin-top:5px; color:#fff;"></code>
   </div>
 
   <div id="ui-controls">
@@ -49,37 +55,9 @@
     <button onclick="window.setRideMode('slide')">Aqua Slide</button>
   </div>
 
-  <div id="ui-overlay" style="position: absolute; bottom: 20px; left: 20px; z-index: 100;">
-    <button id="ticket-btn" onclick="getTicket()" style="padding: 10px; background: #ffd700;">Get Math Ticket</button>
-    <button id="entry-btn" onclick="enterPark()" style="padding: 10px; background: #555;" disabled>Enter Rides</button>
-    
-    <div id="ride-controls" style="display: none; margin-top: 10px;">
-        <button onclick="setRideMode('coaster')">Sin Dropper</button>
-        <button onclick="setRideMode('wheel')">Unit Wheel</button>
-        <button onclick="setRideMode('dropper')">Tan Drop</button>
-        <button onclick="setRideMode('carousel')">Carousel</button>
-        <button onclick="setRideMode('slide')">Archimedean Slide</button>
-        <button onclick="setRideMode('walking')" style="background: #ff4444; color: white;">Exit Ride</button>
-    </div>
-</div>
-
-<div id="math-hud" style="position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.8); color: #00d2ff; padding: 15px; border: 2px solid #00d2ff; border-radius: 10px; display: none; width: 250px;">
-    <b id="math-title"></b><br>
-    <span id="math-desc" style="color: white; font-size: 0.9em;"></span>
-</div>
-
-  #math-hud {
-  position: absolute; top: 20px; right: 20px; width: 220px;
-  background: rgba(0, 0, 0, 0.85); color: #00d2ff; padding: 15px;
-  border: 2px solid #00d2ff; border-radius: 10px; display: none; z-index: 100;
-  pointer-events: none;
-}
-
-<div id="math-hud">
-  <b id="math-title" style="font-size:1.2em;"></b><br>
-  <span id="math-desc"></span><br>
-  <code id="math-formula" style="color:#fff; display:block; margin-top:5px;"></code>
-</div>
+  <div id="ui-overlay" style="position: absolute; bottom: 80px; left: 20px; z-index: 100;">
+    <button id="ticket-btn" onclick="window.hasTicket=true; alert('Ticket Gained!')" style="padding: 10px; background: #ffd700; color: #000;">Get Math Ticket</button>
+  </div>
 
   <script type="importmap">
     { "imports": { "three": "https://unpkg.com/three@0.152.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.152.0/examples/jsm/" } }
