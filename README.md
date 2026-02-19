@@ -35,7 +35,7 @@ This makes the experience feel realistic and avoids motion that feels artificial
 
 ## Technology (VR and real‑time computation)
 
-Technology was used to built the software stack, suing javascript to model the physics and HTML for the web interface. It was also used through the intergation of VR frameworks with real-time physics calculations.
+Technology was used to built the software stack, using javascript to model the physics and HTML for the web interface. It was also used through the integration of VR frameworks with real-time physics calculations.
 
 Technology is represented through the use of **VR frameworks and real‑time rendering**. The project continuously updates physics calculations and synchronizes them with the VR camera so that visual motion matches physical motion.
 
